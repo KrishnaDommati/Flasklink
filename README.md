@@ -9,3 +9,26 @@ Flasklink is a modern web application that provides secure user registration and
             experience for managing your data with simplicity and security.
             
 ## Features
+
+- **User Registration:** 
+  - Register with a name, email, and password.
+  - Passwords are hashed using bcrypt for security.
+  - Email uniqueness check during registration.
+
+- **User Login:** 
+  - Log in using email or username and password.
+  - Displays an error message for invalid credentials.
+
+- **Dashboard:**
+  - View and manage personal notes.
+  - Time-based greeting based on the current hour (Good Morning, Good Afternoon, Good Evening).
+
+- **Note Management:**
+  - Add and delete notes.
+  - Flash messages indicate the success or failure of note operations.
+
+- **Logout:**
+  - End the user session.
+
+- **Account Deletion:**
+  - Delete your account and remove all associated data.
