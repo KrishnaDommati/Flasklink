@@ -1,0 +1,84 @@
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="containernav">
+            <!-- Logo Image -->
+            <a href="/" class="navbar-brand">
+                <img src="{{ url_for('static', filename='logo.jpg') }}" alt="Flasklink Logo" class="navbar-logo">
+                Flasklink
+            </a>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="/dashboard" class="nav-link">Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 class="title">Register Form</h2>
+        <form method="POST" action="{{ url_for('register') }}">
+            {{ form.hidden_tag() }} <!-- To include CSRF token -->
+            <input type="text" name="name" placeholder="Name" value="{{ form.name.data if form.name.data else '' }}">
+            {% for error in form.name.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+            
+            <input type="email" name="email" placeholder="Email" value="{{ form.email.data if form.email.data else '' }}">
+            {% for error in form.email.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+            
+            <input type="password" name="password" placeholder="Password">
+            {% for error in form.password.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+
+            <input type="password" name="confirm_password" placeholder="Confirm Password">
+            {% for error in form.confirm_password.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+            
+            <button type="submit">Register</button>
+        </form>
+        <div class="bottom">
+            <span>Already have an account?</span>
+            <a href="{{ url_for('login') }}">Login</a>
+        </div>
+    </div>
+
+    <!-- footer content -->
+    <div class="footer-container">
+        <footer class="bg-light text-center text-white">
+            <div class="social-menu">
+                <div class="social-icon">
+                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                </div>
+                <div class="social-icon">
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                </div>
+                <div class="social-icon">
+                <a href="#"><i class="fa-brands fa-google"></i></a>
+                </div>
+                <div class="social-icon">
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+                <div class="social-icon">
+                <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                </div>
+                <div class="social-icon">
+                <a href="#"><i class="fa-brands fa-github"></i></a>
+                </div>
+            </div>
+        
+            <div class="copyright text-center p-3">
+                Thankyou for visiting Flashlink
+            </div>
+        </footer>
+    </div>
+
+{% endblock %}

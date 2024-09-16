@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Flasklink</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="containernav">
+            <!-- Logo Image -->
+            <a href="/" class="navbar-brand">
+                <img src="{{ url_for('static', filename='logo.jpg') }}" alt="Flasklink Logo" class="navbar-logo">
+                Flasklink
+            </a>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="/dashboard" class="nav-link">Dashboard</a></li>
+                {% if user %}
+                    <li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container"></div>
+    <h2>Welcome to the Dashboard</h2>
+    
+    {% if user %}
+        <!-- Time-Based Greeting -->
+        <h3>{{ greeting }}, {{ user[1] }}</h3>
+
+        <p>User Information</p>
+        <ul>
+            <li><span class="label">Name:</span> {{ user[1] }}</li>
+            <li><span class="label">Email:</span> {{ user[2] }}</li>
+        </ul>
+
+    {% endif %}
+    </div>
+
+    <!-- notes -->
+    <div class="note-container mt-5"></div>
+        <h3 align="center">Your Notes</h3>
+        <form id="noteForm" method="POST">
+            <textarea id="noteContent" name="note_content" placeholder="Note Content" required></textarea>
+            <button type="submit" name="add_note">Add Note</button>
+        </form>
+        <div id="notesList">
+            {% if notes %}
+                <ul>
+                    {% for note in notes %}
+                        <li style="line-height: 1.5;">
+                            {{ note[2] }} <!-- Assuming note[2] is the content -->
+                            <form method="POST" action="" style="display:inline;">
+                                <input type="hidden" name="note_id" value="{{ note[0] }}">
+                                <button type="submit" name="delete_note" class="delete-btn" aria-label="Delete note">&times;</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li>No notes yet.</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No notes yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- notes end -->
+
+    <div class="container mt-5">
+        <!-- Delete Account Button -->
+        <button id="deleteAccountBtn">Delete Account</button>
+
+        <!-- Confirmation Popup -->
+        <div id="confirmDeleteModal" class="modal">
+            <div class="modal-content">
+                <p>Do you want to delete the account. Sure?</p>
+                <button id="confirmDeleteBtn">Delete</button>
+                <button id="cancelDeleteBtn">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Flash Message Popup -->
+        <div id="flashMessageModal" class="modal">
+            <div class="modal-content">
+                <p>Your account has been deleted successfully.</p>
+                <button id="flashMessageOkBtn">OK</button>
+            </div>
+        </div>
+
+        <!-- Logout Success Popup -->
+        <div id="logoutSuccessModal" class="modal">
+            <div class="modal-content">
+                <p>You have successfully logged out.</p>
+                <button id="logoutSuccessOkBtn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- footer content -->
+    <div class="footer-container">
+        <footer class="bg-light text-center text-white">
+        <div class="social-menu">
+            <div class="social-icon">
+            <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+            </div>
+            <div class="social-icon">
+            <a href="#"><i class="fa-brands fa-twitter"></i></a>
+            </div>
+            <div class="social-icon">
+            <a href="#"><i class="fa-brands fa-google"></i></a>
+            </div>
+            <div class="social-icon">
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+            <div class="social-icon">
+            <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+            </div>
+            <div class="social-icon">
+            <a href="#"><i class="fa-brands fa-github"></i></a>
+            </div>
+        </div>
+    
+        <div class="copyright text-center p-3">
+            Thankyou for visiting Flashlink
+        </div>
+        </footer>
+    </div>
+
+
+    <!-- JavaScript for Popup Handling -->
+    <script>
+        document.getElementById('deleteAccountBtn').addEventListener('click', function() {
+            document.getElementById('confirmDeleteModal').style.display = 'block';
+        });
+
+        document.getElementById('cancelDeleteBtn').addEventListener('click', function() {
+            document.getElementById('confirmDeleteModal').style.display = 'none';
+        });
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+            fetch('{{ url_for("delete_account") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'include'
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('confirmDeleteModal').style.display = 'none';
+                    document.getElementById('flashMessageModal').style.display = 'block';
+                }
+            });
+        });
+
+        document.getElementById('flashMessageOkBtn').addEventListener('click', function() {
+            window.location.href = '/';  // Redirect to the home page
+        });
+
+         // Handle Logout Button Click
+         document.querySelector('.nav-link[href="/logout"]').addEventListener('click', function(event) {
+            event.preventDefault();
+            fetch('{{ url_for("logout") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'include'
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('logoutSuccessModal').style.display = 'block';
+                }
+            });
+        });
+
+        document.getElementById('logoutSuccessOkBtn').addEventListener('click', function() {
+            window.location.href = '/login';  // Redirect to the login page
+        });
+
+        // notes popup
+        function showToast(message) {
+            const toastContainer = document.getElementById('toastContainer');
+
+            // Create a new toast element
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <i class="fa-solid fa-circle-check"></i>${message}
+            `;
+
+            // Append toast to container
+            toastContainer.appendChild(toast);
+
+            // Show the toast
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+
+            // Hide the toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                // Remove the toast from the DOM
+                setTimeout(() => toastContainer.removeChild(toast), 500);
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const flashMessages = JSON.parse('{{ get_flashed_messages(with_categories=False)|tojson|safe }}');
+            flashMessages.forEach(message => {
+                showToast(message);
+            });
+        });
+    </script>
+</body>
+</html>
