@@ -12,6 +12,7 @@ Flasklink is a modern web application that provides secure user registration and
 
 - **User Registration:** 
   - Register with a name, email, and password.
+  - Passwords must be at least 6 characters long and include at least one uppercase letter, one digit, and one special symbol for enhanced security.
   - Passwords are hashed using bcrypt for security.
   - Email uniqueness check during registration.
 
