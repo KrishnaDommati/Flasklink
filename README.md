@@ -2,7 +2,7 @@
 
 ## Description
 
-Flasklink is a modern web application that provides secure user registration and login, ensuring 
+Flasklink is a modern web application built using the Flask web framework that provides secure user registration and login, ensuring 
             your information is always safe. With a personalized dashboard, users can manage their 
             accounts, view updates, and access exclusive features. Flasklink now also includes a Notes 
             feature, allowing users to efficiently manage personal notes from their dashboard. It is built to offer a seamless 
@@ -33,3 +33,7 @@ Flasklink is a modern web application that provides secure user registration and
 
 - **Account Deletion:**
   - Delete your account and remove all associated data.
+
+## Thank You
+
+Thank you for exploring Flasklink.
