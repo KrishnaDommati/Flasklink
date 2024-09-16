@@ -12,9 +12,9 @@ app.secret_key = 'your_secret_key'
 # MySQL configuration
 db = mysql.connector.connect(
     host = 'localhost',
-    user = 'bunnydk',
-    password = 'dk@5757',
-    database = 'linkform'
+    user = 'username',    # replace with your username
+    password = 'password',    # replace with your password
+    database = 'database name'    # replace with your database name
 )
 
 class RegisterForm(FlaskForm):
